@@ -1,0 +1,104 @@
+import React, { useState } from 'react';
+import { View, Text, TextInput, Button, Image, StyleSheet } from 'react-native';
+
+export default function App() {
+  const [weight, setWeight] = useState('');
+  const [height, setHeight] = useState('');
+  const [result, setResult] = useState('');
+  const [status, setStatus] = useState('');
+  const [image, setImage] = useState('');
+
+  const calculateIMC = () => {
+    const imc = parseFloat(weight) / (parseFloat(height) * parseFloat(height));
+    let imcStatus = '';
+    let img = '';
+
+    if (imc < 18.5) {
+      imcStatus = 'Abaixo do Peso';
+      img = 'https://abeso.org.br/wp-content/uploads/2019/12/imc_c_04.png.webp';
+    } else if (imc >= 18.5 && imc < 25) {
+      imcStatus = 'Peso Normal';
+      img = 'https://abeso.org.br/wp-content/uploads/2019/12/imc_c_03.png.webp';
+    } else if (imc >= 25 && imc < 30) {
+      imcStatus = 'Sobrepeso';
+      img = 'https://abeso.org.br/wp-content/uploads/2019/12/imc_04.png.webp';
+    } else if (imc >= 30 && imc < 35) {
+      imcStatus = 'Obesidade Grau I';
+      img = 'https://abeso.org.br/wp-content/uploads/2019/12/imc_c_02.png.webp';
+    } else if (imc >= 35 && imc < 40) {
+      imcStatus = 'Obesidade Grau II';
+      img = 'https://abeso.org.br/wp-content/uploads/2019/12/imc_c_02.png.webp';
+    } else {
+      imcStatus = 'Obesidade Mórbida';
+      img = 'https://abeso.org.br/wp-content/uploads/2019/12/imc_c_01.png.webp';
+    }
+
+    setResult(imc.toFixed(2));
+    setStatus(imcStatus);
+    setImage(img);
+  };
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>Calculadora de IMC</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Peso (kg)"
+        keyboardType="numeric"
+        value={weight}
+        onChangeText={setWeight}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Altura (m)"
+        keyboardType="numeric"
+        value={height}
+        onChangeText={setHeight}
+      />
+      <Button title="Calcular" onPress={calculateIMC} />
+      {result ? (
+        <View style={styles.resultContainer}>
+          <Text style={styles.resultText}>Seu IMC: {result}</Text>
+          <Text style={styles.resultText}>Status: {status}</Text>
+          {image ? <Image source={{ uri: image }} style={styles.image} /> : null}
+        </View>
+      ) : null}
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20,
+  },
+  input: {
+    width: '100%',
+    height: 40,
+    borderColor: '#ccc',
+    borderWidth: 1,
+    marginBottom: 10,
+    paddingHorizontal: 10,
+    borderRadius: 5,
+  },
+  resultContainer: {
+    marginTop: 20,
+    alignItems: 'center',
+  },
+  resultText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  image: {
+    width: 150,
+    height: 150,
+    marginTop: 10,
+  },
+});
